@@ -5,6 +5,7 @@ from typing import Any, Dict
 
 import yaml
 
+
 @dataclass(frozen=True)
 class LazyConstructor:
     """
@@ -70,7 +71,7 @@ class LazyConstructor:
         # If there are any LazyConstructors in the keyword arguments, intialize
         # them before intializing itself. Allows for a recursive chain of
         # intialization. Also copies over the specified kwargs.
-        
+
         init_kwargs = {}
         for (k, v) in list(self._kwargs.items()) + list(kwargs.items()):
             if isinstance(v, LazyConstructor):
