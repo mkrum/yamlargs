@@ -166,7 +166,7 @@ def make_lazy_function(type_, default_kwargs=None):
                 if k not in kwargs.keys():
                     kwargs[k] = v
 
-        return lambda: LazyConstructor(type_, kwargs)
+        return LazyConstructor(LazyConstructor, {"_fn": type_, "_kwargs": kwargs})
 
     yaml.add_constructor("!" + name, _constructor)
 

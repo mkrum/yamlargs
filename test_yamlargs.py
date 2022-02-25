@@ -89,3 +89,13 @@ def test_yaml_function():
     data = yaml.load("my_fn: !fn\n b: 2", yaml.UnsafeLoader)
     myfn = data["my_fn"]()
     assert myfn(2) == 6
+
+
+def test_yaml_function_recurse():
+    def fn(x, b=1):
+        return x ** 2 + b
+
+    make_lazy_function(fn)
+    data = yaml.load("cup: !DiceCup\n dice: !fn\n  b: 2", yaml.UnsafeLoader)
+    cup = data["cup"]()
+    assert cup.dice(2) == 6
