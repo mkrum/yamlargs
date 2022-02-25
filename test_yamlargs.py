@@ -1,6 +1,6 @@
 import yaml
 
-from yamlargs.yamlargs import LazyConstructor, make_lazy_constructor
+from yamlargs.yamlargs import LazyConstructor, make_lazy_constructor, make_lazy_function
 
 
 class Dice:
@@ -79,3 +79,13 @@ def test_yaml_loading_lazy_recursive():
     make_lazy_constructor(DiceCup)
     data = yaml.load("load: !DiceCup\n dice: !Dice\n  value: 123", yaml.UnsafeLoader)
     assert data["load"]().dice.value == 123
+
+
+def test_yaml_function():
+    def fn(x, b=1):
+        return x ** 2 + b
+
+    make_lazy_function(fn)
+    data = yaml.load("my_fn: !fn\n b: 2", yaml.UnsafeLoader)
+    myfn = data["my_fn"]()
+    assert myfn(2) == 6

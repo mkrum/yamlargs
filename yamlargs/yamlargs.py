@@ -139,6 +139,38 @@ def make_lazy_constructor(type_, default_kwargs=None):
     yaml.add_constructor("!" + name + "Class", _type_constructor)
 
 
+def make_lazy_function(type_, default_kwargs=None):
+    """
+    Exposes to YAML a lazy function, so it can be referenced
+    in a config.
+
+    >>> def fn(x, b=1):
+    ...     return x**2 + b
+    >>> make_lazy_function(fn)
+    >>> data = yaml.load("my_fn: !fn\n b: 2", yaml.UnsafeLoader)
+    >>> myfn = data["my_fn"]()
+    >>> myfn(2)
+    6
+    """
+
+    name = type_.__name__
+
+    def _constructor(loader, node):
+        kwargs = loader.construct_mapping(node)
+
+        # Surely, there must be a better way to do this, right? I tried .update
+        # but that was casuing weird issues.
+
+        if default_kwargs is not None:
+            for (k, v) in default_kwargs.items():
+                if k not in kwargs.keys():
+                    kwargs[k] = v
+
+        return lambda: LazyConstructor(type_, kwargs)
+
+    yaml.add_constructor("!" + name, _constructor)
+
+
 def load_config(path):
     out = yaml.load(open(path, "r"), yaml.UnsafeLoader)
     return out
