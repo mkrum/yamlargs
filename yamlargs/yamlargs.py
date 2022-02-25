@@ -101,6 +101,15 @@ class LazyConstructor:
         keys = self.keys()
         return [(k, self.__getitem__(k)) for k in keys]
 
+def _get_kwargs_from_node(loader, node):
+    #TODO: This try except is a little weird. I feel like there should be a
+    # way to check rather than the error
+    try:
+        kwargs = loader.construct_mapping(node)
+    # No mapping specified, treat this an empty dict
+    except yaml.constructor.ConstructorError:
+        kwargs = {}
+    return kwargs
 
 def make_lazy_constructor(type_, default_kwargs=None):
     """
@@ -120,7 +129,8 @@ def make_lazy_constructor(type_, default_kwargs=None):
     name = type_.__name__
 
     def _constructor(loader, node):
-        kwargs = loader.construct_mapping(node)
+
+        kwargs = _get_kwargs_from_node(loader, node)
 
         # Surely, there must be a better way to do this, right? I tried .update
         # but that was casuing weird issues.
@@ -129,6 +139,7 @@ def make_lazy_constructor(type_, default_kwargs=None):
             for (k, v) in default_kwargs.items():
                 if k not in kwargs.keys():
                     kwargs[k] = v
+
 
         return LazyConstructor(type_, kwargs)
 
@@ -156,10 +167,7 @@ def make_lazy_function(type_, default_kwargs=None):
     name = type_.__name__
 
     def _constructor(loader, node):
-        kwargs = loader.construct_mapping(node)
-
-        # Surely, there must be a better way to do this, right? I tried .update
-        # but that was casuing weird issues.
+        kwargs = _get_kwargs_from_node(loader, node)
 
         if default_kwargs is not None:
             for (k, v) in default_kwargs.items():

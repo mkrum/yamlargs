@@ -58,6 +58,13 @@ def test_lazy_as_kwarg():
     assert cup.dice.value == 123
     assert cup.dice.max_value == 1234
 
+def test_yaml_loading_no_args():
+    make_lazy_constructor(Dice)
+    data = yaml.load("load: !Dice", yaml.UnsafeLoader)
+    assert data["load"](1).value == 1
+    data = yaml.load("load: !DiceClass", yaml.UnsafeLoader)
+    assert data["load"]() == Dice
+
 
 def test_yaml_loading():
     make_lazy_constructor(Dice)
@@ -81,7 +88,7 @@ def test_yaml_loading_lazy_recursive():
     assert data["load"]().dice.value == 123
 
 
-def test_yaml_function():
+def test_yaml_function_with_kwargs():
     def fn(x, b=1):
         return x ** 2 + b
 
@@ -89,6 +96,15 @@ def test_yaml_function():
     data = yaml.load("my_fn: !fn\n b: 2", yaml.UnsafeLoader)
     myfn = data["my_fn"]()
     assert myfn(2) == 6
+
+def test_yaml_function():
+    def fn(x, b=1):
+        return x ** 2 + b
+
+    make_lazy_function(fn)
+    data = yaml.load("my_fn: !fn", yaml.UnsafeLoader)
+    myfn = data["my_fn"]()
+    assert myfn(2) == 5
 
 
 def test_yaml_function_recurse():
