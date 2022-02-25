@@ -1,15 +1,15 @@
 language: python
 python:
 - 3.8
-
 env:
   PYPI_TOKEN:
-    secure: FY5HUh3UW4B5gd6qYzK8BVZqIpYiEpIN1+F6SkgW1HOOvJxgAkGCGztH/s7H/cn6Q0wG+vKrv9ZZ5H63oENC/NtVln99NMBVUNNrDPe+0Jl+F54oxJGgB/9jTVo6oXLyVg/afBkHM/dYp9nfkm/htfp1PBTGr1gkBXyfCRP/2cb4hpSrIIPuzfpPbPPY4KNvZwb3bru4K4KfoOGwxudp7vn4aOx27wjOzOEUdVFtsBIBqXasMfVnp4m0KnKJjQiMIVjrcAcWmHn3h7SxzA9P0XbkFZdP6G33SIWQjfYjqXDEm/litP9Qfj/tqcID+QORcjrQan7lXuyF9qPoqvic1hWuKbrlUea/2gIAXs2Txfe5VQClR0zLnfrgJYdACTeNU4dmMdhMIMKsbnpA/bBEgOFcsUptl0vQ/VnV4pjmaxaZ913tWqgDfCafnm3VczIG/cGyUjIHK2LWn+i40WpSfw231Ayqzarp9I4bklZeaDNsya0tPXmW7uLAc5Dnh2lgvY+DDFvQ6VJDr4dorkOeMs55vkgg61lLWeIT7Hq93N8LCN1bcujoWWTIuX1h2Y16PBDs1Jq5xFbsgYXGwV2dhkYobTRsIjR6aYE+/EfISds6N9GMMxJSyLB/VP3cT676Xv3BcRK/EMB8+/kLwVEH0MNzphLL88vbjdytG7LNXiM=
+    secure: eGWMffVkIMEljlLjUu9ONcdJcf5gQtx31hNy35hz4iExh3msdfuYUyAd5TN/Di/T87Uw5KlD14DG3TCDxsKECJVSk/WUMoqdTj3jUfprbZS9SFyuFYYDooZOIJ6cnXtncSs6g9CtYklsT0EDvgm4V1nt2K4i5uk8KduJDXtjQZROjjkyFKTX35tcvwISIh93yR224tH9NmhYOBHaQhkwo4hfmsgtbxnTltl/TadB3DI1D8qlbc0cG/im8H6E16U/71bKzAan8oQJvoFBAuALv/oYWrmVaDbI3SR3EeXGI+b/6C05J9ewRKS5C/OP6JGxcNy0mQ8H2z/7lnNM10V309JFRDl/fCO0D3YNQPlJbR542eOVLN0nmgaByy6QAgpjcRvy9DB1OrdoO+i7dHd+msHMERnO1XXsttOahpjYzp3gzfqFuwMmwN39kffWGtdlj7wWwi9pqYp5TXTpGA4Qp9sHuSP8Rat0wqCaU1qg80E8FQqJcbSX3OEkMM88mbZjmVNJDqnj3dgLZ7S/GkQdIgEBDjPOYva88Y1mD0lilxE9NRjP7HuxJkoKyNgU2Ojy0Yi5xno3ODcxz1TprgnNCHL7IdvvdQN5EEoWdJMmZY05BbDsMdmK6S3e8Yh8ly51LAUyCgINYxCnBTfAw2TNrh0qTVXKb3cqOsCdcHCOtac=
 
 script:
-    - pip install twine pytest
-    - pip install -e .
-    - pytest -s
-    - python setup.py sdist bdist_wheel
-    - twine check dist/* 
-    - if [ "$TRAVIS_BRANCH" = "main" ]; then twine upload --skip-existing dist/* -u __token__ -p $PYPI_TOKEN; fi
+- pip install twine pytest
+- pip install -e .
+- pytest -s
+- python setup.py sdist bdist_wheel
+- twine check dist/*
+- if [ "$TRAVIS_BRANCH" = "main" ]; then twine upload --skip-existing dist/* -u __token__
+  -p $PYPI_TOKEN; fi
