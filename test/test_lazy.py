@@ -58,6 +58,7 @@ def test_lazy_as_kwarg():
     assert cup.dice.value == 123
     assert cup.dice.max_value == 1234
 
+
 def test_yaml_loading_no_args():
     make_lazy_constructor(Dice)
     data = yaml.load("load: !Dice", yaml.UnsafeLoader)
@@ -96,6 +97,7 @@ def test_yaml_function_with_kwargs():
     data = yaml.load("my_fn: !fn\n b: 2", yaml.UnsafeLoader)
     myfn = data["my_fn"]()
     assert myfn(2) == 6
+
 
 def test_yaml_function():
     def fn(x, b=1):

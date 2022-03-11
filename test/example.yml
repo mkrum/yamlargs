@@ -1,0 +1,7 @@
+
+load: !DiceCup
+    dice: !Dice
+        value: 123
+
+fn: !fake_fn
+    n: 100

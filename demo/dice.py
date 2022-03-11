@@ -1,9 +1,8 @@
-
 import numpy as np
 import yamlargs as ya
 
-class Dice:
 
+class Dice:
     def __init__(self, value, max_value=6):
         self.value = value
         if self.value > max_value:
@@ -15,6 +14,7 @@ class Dice:
     def __repr__(self):
         return self.__str__()
 
+
 class DiceCup:
     def __init__(self, dice=Dice(1, max_value=10)):
         self.dice = dice
@@ -22,6 +22,7 @@ class DiceCup:
 
 def sample(dice_cup, n=1):
     return np.random.choice(dice_cup.dice.value, size=n)
+
 
 ya.make_lazy_constructor(Dice)
 ya.make_lazy_constructor(DiceCup)

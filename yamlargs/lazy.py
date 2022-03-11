@@ -100,8 +100,39 @@ class LazyConstructor:
         keys = self.keys()
         return [(k, self.__getitem__(k)) for k in keys]
 
+
+@dataclass(frozen=True)
+class LazyFunction(LazyConstructor):
+    """
+    An object that wraps a function in a lazy, configurable way.
+
+    See LazyConstructor. Does the same thing, except it returns a function
+    instead of an intialized value on call.
+
+    >>> class Dice:
+    ...       def __init__(self, value, max_value=6):
+    ...               self.value = value
+    ...               if self.value > max_value:
+    ...                       print("Bad value")
+    ...       def __str__(self):
+    ...               return f"Dice({self.value})"
+    ...       def __repr__(self):
+    ...               return self.__str__()
+    ...
+    >>> c = LazyFunction(Dice, {"max_value": 6})
+    >>> c()
+    Dice
+    >>> c()(10)
+    Bad value
+    Dice(10)
+    """
+
+    def __call__(self, *args, **kwargs):
+        return super().__call__
+
+
 def _get_kwargs_from_node(loader, node):
-    #TODO: This try except is a little weird. I feel like there should be a
+    # TODO: This try except is a little weird. I feel like there should be a
     # way to check rather than the error
     try:
         kwargs = loader.construct_mapping(node)
@@ -109,6 +140,7 @@ def _get_kwargs_from_node(loader, node):
     except yaml.constructor.ConstructorError:
         kwargs = {}
     return kwargs
+
 
 def make_lazy_constructor(type_, default_kwargs=None):
     """
@@ -138,7 +170,6 @@ def make_lazy_constructor(type_, default_kwargs=None):
             for (k, v) in default_kwargs.items():
                 if k not in kwargs.keys():
                     kwargs[k] = v
-
 
         return LazyConstructor(type_, kwargs)
 
@@ -173,6 +204,6 @@ def make_lazy_function(type_, default_kwargs=None):
                 if k not in kwargs.keys():
                     kwargs[k] = v
 
-        return LazyConstructor(LazyConstructor, {"_fn": type_, "_kwargs": kwargs})
+        return LazyFunction(type_, kwargs)
 
     yaml.add_constructor("!" + name, _constructor)
