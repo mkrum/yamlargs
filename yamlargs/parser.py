@@ -55,7 +55,7 @@ def load_config_and_create_parser():
     """
     path = sys.argv[1]
     config = YAMLConfig.load(path)
-    parser = create_parser(path, config)
+    parser = create_parser(config)
     return config, parser
 
 
