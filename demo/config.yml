@@ -1,0 +1,7 @@
+
+dice_cup: !DiceCup
+    dice: !Dice
+        value: 6
+
+fn: !sample
+    n: 6

@@ -1,6 +1,6 @@
 import yaml
 
-from yamlargs.yamlargs import LazyConstructor, make_lazy_constructor, make_lazy_function
+from yamlargs.lazy import LazyConstructor, make_lazy_constructor, make_lazy_function
 
 
 class Dice:
