@@ -8,7 +8,7 @@ setuptools.setup(
     description="YAML based config management for ML",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    version="0.0.4",
+    version="0.1.5",
     packages=["yamlargs"],
     python_requires=">=3",
     install_requires=["pyyaml"],
