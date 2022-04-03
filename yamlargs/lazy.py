@@ -100,7 +100,6 @@ class LazyConstructor:
         keys = self.keys()
         return [(k, self.__getitem__(k)) for k in keys]
 
-
 @dataclass(frozen=True)
 class LazyFunction(LazyConstructor):
     """
@@ -128,8 +127,19 @@ class LazyFunction(LazyConstructor):
     """
 
     def __call__(self, *args, **kwargs):
-        return super().__call__
+        base_fn = super().__call__
+        
+        # Allows for attributes to remain on wrapped functions, so if you wrap
+        # a class, you can still access the classmethods
+        attributes = filter(lambda x: x[0] != '_', dir(self._fn))
+        attributes = {a: getattr(self._fn, a) for a in attributes}
+        attributes['__call__'] = super().__call__
 
+        return type(
+            self._fn.__name__ + "(LazyFunction)",
+            (object,),
+            attributes
+        )()
 
 def _get_kwargs_from_node(loader, node):
     # TODO: This try except is a little weird. I feel like there should be a
