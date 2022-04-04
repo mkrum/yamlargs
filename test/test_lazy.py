@@ -91,7 +91,7 @@ def test_yaml_loading_lazy_recursive():
 
 def test_yaml_function_with_kwargs():
     def fn(x, b=1):
-        return x ** 2 + b
+        return x**2 + b
 
     make_lazy_function(fn)
     data = yaml.load("my_fn: !fn\n b: 2", yaml.UnsafeLoader)
@@ -101,7 +101,7 @@ def test_yaml_function_with_kwargs():
 
 def test_yaml_function():
     def fn(x, b=1):
-        return x ** 2 + b
+        return x**2 + b
 
     make_lazy_function(fn)
     data = yaml.load("my_fn: !fn", yaml.UnsafeLoader)
@@ -111,7 +111,7 @@ def test_yaml_function():
 
 def test_yaml_function_recurse():
     def fn(x, b=1):
-        return x ** 2 + b
+        return x**2 + b
 
     make_lazy_function(fn)
     data = yaml.load("cup: !DiceCup\n dice: !fn\n  b: 2", yaml.UnsafeLoader)
