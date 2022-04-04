@@ -80,7 +80,7 @@ class LazyConstructor:
         try:
             return self._fn(*args, **init_kwargs)
         except TypeError as e:
-            raise TypeError(f"Error initilaizing {self._fn.__name__}") from e
+            raise TypeError(f"Error calling {self._fn.__name__}") from e
 
     def __repr__(self):
         d = {"class": self._fn}
