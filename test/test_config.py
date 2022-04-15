@@ -1,3 +1,4 @@
+import yaml
 from yamlargs.config import YAMLConfig
 
 from yamlargs import make_lazy_constructor, make_lazy_function
@@ -27,7 +28,10 @@ def fake_fn(x, n=10):
 
 
 make_lazy_constructor(Dice)
+make_lazy_function(Dice)
+
 make_lazy_constructor(DiceCup)
+
 make_lazy_function(fake_fn)
 
 
@@ -54,9 +58,22 @@ def test_dot_set():
 def test_keys():
     config = YAMLConfig.load("test/example.yml")
     assert config.keys() == [
+        "init.class",
+        "init.value",
         "load.class",
         "load.dice.class",
         "load.dice.value",
         "fn.class",
         "fn.n",
     ]
+
+def test_json():
+    config = YAMLConfig.load("test/example.yml")
+    data = config.to_json()
+    assert data['init'] == {"lazyObject": "!Dice", "kwargs": {"value": 49}}
+    assert config == YAMLConfig.from_json(config.to_json())
+
+def test_yaml():
+    config = YAMLConfig.load("test/example.yml")
+    assert config == YAMLConfig.from_yaml(config.to_yaml())
+

@@ -1,6 +1,9 @@
 
-load: !DiceCup
-    dice: !Dice
+init: !Dice
+    value: 49
+
+load: !DiceCup()
+    dice: !Dice()
         value: 123
 
 fn: !fake_fn

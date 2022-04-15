@@ -82,9 +82,17 @@ class LazyConstructor:
         except TypeError as e:
             raise TypeError(f"Error calling {self._fn.__name__}") from e
 
+    def as_dict(self):
+        kwargs = {}
+        for (k, v) in self._kwargs.items():
+            if isinstance(v, LazyConstructor):
+                v = v.as_dict()
+            kwargs[k] = v
+        d = {"lazyObject": "!" + self._fn.__name__ + "()", "kwargs": kwargs}
+        return d
+
     def __repr__(self):
-        d = {"class": self._fn}
-        d.update(self._kwargs)
+        d = self.as_dict()
         return str(d)
 
     def __str__(self):
@@ -130,6 +138,15 @@ class LazyFunction(LazyConstructor):
     Dice(10)
     """
 
+    def as_dict(self):
+        kwargs = {}
+        for (k, v) in self._kwargs.items():
+            if isinstance(v, LazyConstructor):
+                v = v.as_dict()
+            kwargs[k] = v
+        d = {"lazyObject": "!" + self._fn.__name__, "kwargs": kwargs}
+        return d
+
     def __call__(self, *args, **kwargs):
         base_fn = super().__call__
 
@@ -152,6 +169,9 @@ def _get_kwargs_from_node(loader, node):
         kwargs = {}
     return kwargs
 
+def lazy_yaml(obj_, default_kwargs=None):
+    make_lazy_function(obj_, default_kwargs=default_kwargs)
+    make_lazy_constructor(obj_, default_kwargs=default_kwargs)
 
 def make_lazy_constructor(type_, default_kwargs=None):
     """
@@ -163,9 +183,6 @@ def make_lazy_constructor(type_, default_kwargs=None):
     >>> data = yaml.load("dice: !Dice", yaml.UnsafeLoader)
     >>> data["dice"]()
     Dice()
-    >>> data = yaml.load("dice: !DiceClass", yaml.UnsafeLoader)
-    >>> data["dice"]()
-    Dice
     """
 
     name = type_.__name__
@@ -187,8 +204,7 @@ def make_lazy_constructor(type_, default_kwargs=None):
     def _type_constructor(loader, node):
         return lambda: type_
 
-    yaml.add_constructor("!" + name, _constructor)
-    yaml.add_constructor("!" + name + "Class", _type_constructor)
+    yaml.add_constructor("!" + name + "()", _constructor)
 
 
 def make_lazy_function(type_, default_kwargs=None):
@@ -217,4 +233,4 @@ def make_lazy_function(type_, default_kwargs=None):
 
         return LazyFunction(type_, kwargs)
 
-    yaml.add_constructor("!" + name, _constructor)
+    yaml.add_constructor("!" + name , _constructor)
