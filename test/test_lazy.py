@@ -64,10 +64,12 @@ def test_yaml_loading_no_args():
     data = yaml.load("load: !Dice()", yaml.UnsafeLoader)
     assert data["load"](1).value == 1
 
+
 def test_yaml_loading():
     make_lazy_constructor(Dice)
     data = yaml.load("load: !Dice()\n value: 1", yaml.UnsafeLoader)
     assert data["load"]().value == 1
+
 
 def test_yaml_loading_with_kwargs():
     make_lazy_constructor(Dice, {"max_value": 10})
@@ -79,7 +81,9 @@ def test_yaml_loading_with_kwargs():
 def test_yaml_loading_lazy_recursive():
     make_lazy_constructor(Dice)
     make_lazy_constructor(DiceCup)
-    data = yaml.load("load: !DiceCup()\n dice: !Dice()\n  value: 123", yaml.UnsafeLoader)
+    data = yaml.load(
+        "load: !DiceCup()\n dice: !Dice()\n  value: 123", yaml.UnsafeLoader
+    )
     assert data["load"]().dice.value == 123
 
 

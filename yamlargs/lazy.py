@@ -169,9 +169,11 @@ def _get_kwargs_from_node(loader, node):
         kwargs = {}
     return kwargs
 
+
 def lazy_yaml(obj_, default_kwargs=None):
     make_lazy_function(obj_, default_kwargs=default_kwargs)
     make_lazy_constructor(obj_, default_kwargs=default_kwargs)
+
 
 def make_lazy_constructor(type_, default_kwargs=None):
     """
@@ -233,4 +235,4 @@ def make_lazy_function(type_, default_kwargs=None):
 
         return LazyFunction(type_, kwargs)
 
-    yaml.add_constructor("!" + name , _constructor)
+    yaml.add_constructor("!" + name, _constructor)

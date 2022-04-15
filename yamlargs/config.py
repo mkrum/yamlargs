@@ -12,6 +12,7 @@ class YAMLConfig:
     """
     Config object.
     """
+
     data: Dict
 
     @classmethod
@@ -77,20 +78,20 @@ class YAMLConfig:
         json_data = self.to_json()
         return _dict_to_yaml(json_data)
 
+
 def _dict_to_yaml(data, indent=""):
     """
     Helper function for recursively turning the json data into yaml strings.
     """
     yaml_data = ""
     for (k, v) in data.items():
-        if isinstance(v, dict) and 'lazyObject' in v.keys():
-            name = v['lazyObject']
-            yaml_data += f'{indent}{k}: {name}\n'
-            yaml_data += _dict_to_yaml(v['kwargs'], indent + " " * 4)
+        if isinstance(v, dict) and "lazyObject" in v.keys():
+            name = v["lazyObject"]
+            yaml_data += f"{indent}{k}: {name}\n"
+            yaml_data += _dict_to_yaml(v["kwargs"], indent + " " * 4)
         else:
-            yaml_data += f'{indent}{k}: {v}\n'
+            yaml_data += f"{indent}{k}: {v}\n"
     return yaml_data
-
 
 
 def _get_all_keys(config):

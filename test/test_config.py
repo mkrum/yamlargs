@@ -67,13 +67,14 @@ def test_keys():
         "fn.n",
     ]
 
+
 def test_json():
     config = YAMLConfig.load("test/example.yml")
     data = config.to_json()
-    assert data['init'] == {"lazyObject": "!Dice", "kwargs": {"value": 49}}
+    assert data["init"] == {"lazyObject": "!Dice", "kwargs": {"value": 49}}
     assert config == YAMLConfig.from_json(config.to_json())
+
 
 def test_yaml():
     config = YAMLConfig.load("test/example.yml")
     assert config == YAMLConfig.from_yaml(config.to_yaml())
-
