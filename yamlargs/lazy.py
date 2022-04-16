@@ -1,6 +1,6 @@
 import sys
-from dataclasses import dataclass
 from typing import Any, Dict
+from dataclasses import dataclass
 
 import yaml
 
@@ -170,7 +170,16 @@ def _get_kwargs_from_node(loader, node):
     return kwargs
 
 
-def lazy_yaml(obj_, default_kwargs=None):
+def expose_module(mod):
+    fns = dir(mod)
+    non_private_fns = list(filter(lambda x: x[:2] != "__", fns))
+
+    for fn in non_private_fns:
+        obj_ = getattr(mod, fn)
+        make_lazy(obj_)
+
+
+def make_lazy(obj_, default_kwargs=None):
     make_lazy_function(obj_, default_kwargs=default_kwargs)
     make_lazy_constructor(obj_, default_kwargs=default_kwargs)
 
