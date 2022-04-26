@@ -87,6 +87,8 @@ class LazyConstructor:
         for (k, v) in self._kwargs.items():
             if isinstance(v, LazyConstructor):
                 v = v.as_dict()
+            else:
+                v = repr(v)
             kwargs[k] = v
         d = {"lazyObject": "!" + self._fn.__name__ + "()", "kwargs": kwargs}
         return d
@@ -176,7 +178,10 @@ def expose_module(mod):
 
     for fn in non_private_fns:
         obj_ = getattr(mod, fn)
-        make_lazy(obj_)
+        # TODO: Think of a way to still expose thigs without an explicit name
+        # (lists)
+        if hasattr(obj_, '__name__'):
+            make_lazy(obj_)
 
 
 def make_lazy(obj_, default_kwargs=None):
